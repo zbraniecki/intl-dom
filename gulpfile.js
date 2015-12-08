@@ -7,7 +7,7 @@ var eslint = require('gulp-eslint');
 var Server = require('karma').Server;
 
 gulp.task('build', function() {
-  gulp.src('src/runtime/helper/index.js', {read: false})
+  gulp.src('src/runtime/index.js', {read: false})
     .pipe(plumber({
       handleError: function(err) {
         console.log(err);
@@ -15,7 +15,7 @@ gulp.task('build', function() {
       }
     }))
     .pipe(rollup({ format: 'iife' }))
-    .pipe(rename('intl-helper.js'))
+    .pipe(rename('intl-dom.js'))
     .pipe(gulp.dest('dist'));
 });
 

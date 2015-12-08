@@ -1,69 +1,42 @@
-import { Cache } from '../lib/cache';
-import { findInMap } from '../lib/utils';
-import { knownObjects } from '../lib/objects';
+export function findAffectedElements(cache, root, evt) {
+  const affectedTypes = cache.getAffectedTypes(evt);
 
-const cache = new Cache();
+  const selector = Array.from(affectedTypes).map(
+    type => `[data-i18n-type="${type}"]`).join(',');
 
-const listeners = new Map();
-
-export const IntlHelper = {
-  define(name, type, options) {
-    return cache.define(name, {type, options});
-  },
-  get(key) {
-    return cache.get(key);
-  },
-  handleEvent(evt) {
-    cache.resetObjects(evt);
-    fireObservers(evt);
-  },
-  observe(names, cb) {
-    if (typeof names === 'string') {
-      names = [names];
-    }
-    
-    for (let name of names) {
-      let key = cache.getName(name);
-      let listenerSet = findInMap(listeners, key);
-      if (!listenerSet) {
-        listenerSet = new Set();
-        listeners.set(key, listenerSet);
-      }
-      listenerSet.add(cb);
-    }
-  },
-
-  unobserve(name, cb) {
-    let key = cache.getName(name);
-    let listenerSet = findInMap(listeners, key);
-    listenerSet.delete(cb);
-  },
-};
-
-
-function fireObservers(evt, ...args) {
-  const affectedCallbacks = new Set();
-
-  for (let [key, listenerSet] of listeners) {
-    if (knownObjects[key.type].isAffected(evt.type, key.options)) {
-      listenerSet.forEach(cb => {
-        affectedCallbacks.add(cb);
-      });
-    }
+  if (!selector) {
+    return [];
   }
-
-  affectedCallbacks.forEach(cb => {
-    try {
-      cb(...args);
-    } catch(e) {
-      console.error('Error in callback: ' + e.toString());
-      console.error(e.stack);
-    }
-  });
+  return root.querySelectorAll(selector);
 }
 
-export function bindEvents() {
-  window.addEventListener('languagechange', IntlHelper);
-  window.addEventListener('moztimechange', IntlHelper);
-  window.addEventListener('timeformatchange', IntlHelper);
+export function formatElements(cache, elements) {
+  for (let elem of elements) {
+    if (!elem.hasAttribute('data-i18n-value')) {
+      continue;
+    }
+    const value = elem.getAttribute('data-i18n-value');
+    const type = elem.getAttribute('data-i18n-type');
+    const options = elem.hasAttribute('data-i18n-options') ?
+      JSON.parse(elem.getAttribute('data-i18n-options')) : undefined;
+
+    const formatter = cache.get({type, options});
+    let resolvedValue;
+    switch (type) {
+      case 'datetime':
+        resolvedValue = new Date(parseInt(value));
+        elem.textContent = formatter.format(resolvedValue);
+        break;
+      case 'number':
+        resolvedValue = new Date(parseInt(value));
+        elem.textContent = formatter.format(resolvedValue);
+        break;
+    }
+  }
+}
+
+export function bindEvents(view) {
+  window.addEventListener('languagechange', view);
+  window.addEventListener('moztimechange', view);
+  window.addEventListener('timeformatchange', view);
 }

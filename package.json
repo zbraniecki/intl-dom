@@ -22,11 +22,11 @@
   "directories": {
     "lib": "./src"
   },
-  "main": "./dist/web/intl-helper.js",
-  "browser": "./dist/web/intl-helper.js",
+  "main": "./dist/intl-dom.js",
+  "browser": "./dist/intl-dom.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zbraniecki/intl-helper.git"
+    "url": "https://github.com/zbraniecki/intl-dom.git"
   },
   "keywords": [
     "internationalization",

@@ -15,7 +15,6 @@ export class Cache {
   }
 
   _set(key) {
-    console.log('setting a new cache object');
     const { type, options } = typeof key === 'string' ?
       this._names.get(key) : key;
 

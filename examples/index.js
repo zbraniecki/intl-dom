@@ -1,15 +1,15 @@
 function foo(evt){
   console.log('observed called!');
-  //var f = IntlHelper.get('longDate');
+  var f = document.i18n.get('longDate');
 }
 
 
-IntlHelper.define('longDate', 'datetime', {month: 'long'});
-var f = IntlHelper.get('longDate');
+//document.i18n.define('longDate', 'datetime', {month: 'long'});
+//var f = document.i18n.get('longDate');
 
-IntlHelper.observe('longDate', foo);
+//document.i18n.observe('longDate', foo);
 
-window.IntlHelper.handleEvent(new CustomEvent('moztimechange'));
+//document.i18n.handleEvent(new CustomEvent('moztimechange'));
 
-IntlHelper.unobserve('longDate', foo);
-window.dispatchEvent(new CustomEvent('moztimechange'));
+//document.i18n.unobserve('longDate', foo);
+//window.dispatchEvent(new CustomEvent('moztimechange'));
