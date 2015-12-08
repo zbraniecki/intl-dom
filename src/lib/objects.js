@@ -11,8 +11,10 @@ export const knownObjects = {
     },
 
     isTypeAffected: function (reason) {
-      return ['timeformatchange', 'languagechange',
-      'moztimechange'].includes(reason);
+      return [
+        'timeformatchange',
+        'languagechange',
+        'moztimechange'].includes(reason);
     },
 
     isAffected: function (reason, options) {
@@ -39,11 +41,20 @@ export const knownObjects = {
     },
 
     isAffected: function (reason, options) {
-      if (reason === 'languagechange') {
-        return true;
-      }
-
-      return false;
+      return reason === 'languagechange';
     }
-  }
+  },
+  collator: {
+    create: function(options) {
+      return Intl.Collator(navigator.languages, options);
+    },
+
+    isTypeAffected: function (reason) {
+      return ['languagechange'].includes(reason);
+    },
+
+    isAffected: function(obj, reason) {
+      return reason === 'languagechange';
+    }
+  },
 };
